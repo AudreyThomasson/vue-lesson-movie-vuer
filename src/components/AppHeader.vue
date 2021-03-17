@@ -1,13 +1,13 @@
 <template>
   <v-app-bar app color="red darken-1" dark>
     <v-row justify="space-between" align="center">
-      <v-col :sm="6">
+      <v-col :xs="6" :sm="7" :md="9">
         <div class="d-flex align-center">
           <h1>Movie Vuer</h1>
         </div>
       </v-col>
 
-      <v-col :sm="2" class="mt-5">
+      <v-col :xs="2" class="mt-5">
         <form @submit.prevent="handleSubmit">
           <v-text-field
             v-model="query"
