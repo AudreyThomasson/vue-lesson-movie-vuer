@@ -26,16 +26,23 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async searchMovies({ commit }, query) {
+    async searchMovies({ commit, dispatch }, query) {
       const apiBaseUrl = "https://api.themoviedb.org/3";
       const apiKey = process.env.VUE_APP_MOVIE_API_KEY;
       const url = `${apiBaseUrl}/search/movie?query=${query}&api_key=${apiKey}`;
 
-      const res = await fetch(url);
-      const data = await res.json();
-      commit("setSearchTerm", query);
-      commit("setSearchResults", data);
-      commit("setMovieDetails", null);
+      try {
+        const res = await fetch(url);
+        if (!res.ok) {
+          throw Error('Unable to search');
+        }
+        const data = await res.json();
+        commit("setSearchTerm", query);
+        commit("setSearchResults", data);
+        commit("setMovieDetails", null);
+      } catch (error) {
+        dispatch("showToast", "Unable to search");
+      }
     },
     async selectMovie({ commit }, movie) {
       const apiBaseUrl = "https://api.themoviedb.org/3";
@@ -53,6 +60,12 @@ export default new Vuex.Store({
     const reviewData = await reviewsRes.json();
     commit("setMovieReviews", reviewData.results);
     },
+    showToast({ commit }, message) {
+      commit("setNotification", message);
+      setTimeout(() => {
+        commit("setNotification", null);
+      }, 3000);
+    }
   },
   modules: {},
   getters: {
